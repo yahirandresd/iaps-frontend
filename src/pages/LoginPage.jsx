@@ -3,7 +3,8 @@ import { LockIcon } from '../assets/icons'
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-azul-suave via-white to-verde-suave px-5 py-6 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-b from-azul-suave via-white to-verde-suave flex flex-col md:items-center md:justify-center">
+      <div className="w-full max-w-md mx-auto px-5 py-6 flex flex-col">
       <div className="flex items-center gap-3 mt-3 mb-5">
         <div className="w-14 h-14 rounded-[18px] bg-gradient-to-br from-azul to-azul-oscuro grid place-items-center shadow-md shrink-0">
           <svg viewBox="0 0 32 32" className="w-8 h-8" fill="none">
@@ -27,6 +28,7 @@ export default function LoginPage() {
         <LockIcon className="w-[18px] h-[18px]" />
         Tus datos están protegidos. iAPS no comparte tu información sin tu autorización.
       </p>
+      </div>
     </div>
   )
 }

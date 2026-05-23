@@ -6,7 +6,8 @@ export default function RegisterPage() {
   const navigate = useNavigate()
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-azul-suave via-white to-verde-suave px-5 py-6 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-b from-azul-suave via-white to-verde-suave flex flex-col md:items-center md:justify-center">
+      <div className="w-full max-w-md mx-auto px-5 py-6 flex flex-col">
       <div className="flex items-center gap-3 mb-4">
         <button
           onClick={() => navigate('/login')}
@@ -23,6 +24,7 @@ export default function RegisterPage() {
 
       <div className="bg-white rounded-xl p-[22px] shadow-lg border border-gris-borde">
         <RegisterWizard />
+      </div>
       </div>
     </div>
   )
