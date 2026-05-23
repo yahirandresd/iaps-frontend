@@ -1,0 +1,188 @@
+export const USER = {
+  nombre:    'María Fernández Gómez',
+  initials:  'MF',
+  cedula:    '1.234.567.890',
+  bday:      '12 de marzo de 1978',
+  edad:      47,
+  phone:     '+57 311 234 5678',
+  email:     'maria.fernandez@gmail.com',
+  eps:       'Sura EPS',
+  regimen:   'Contributivo',
+  ips:       'Clínica Las Américas',
+  ipsDir:    'Carrera 45 #20-10, Medellín',
+  afiliado:  'EPS-2019-8842310',
+  emergContacto: 'Andrés Gómez Restrepo (hermano)',
+  emergTel:      '+57 312 987 6543',
+}
+
+export const CITAS = {
+  proximas: [
+    {
+      id: 'c1',
+      tipo: 'Medicina General',
+      medico: 'Dr. Carlos Ruiz Pérez',
+      fecha: '20 de mayo de 2025',
+      hora: '10:00 AM',
+      lugar: 'Clínica Las Américas',
+      direccion: 'Carrera 45 #20-10, Medellín',
+      estado: { label: 'CONFIRMADA', cls: 'green' },
+    },
+    {
+      id: 'c2',
+      tipo: 'Odontología',
+      medico: 'Dra. Laura Mejía',
+      fecha: '4 de junio de 2025',
+      hora: '8:30 AM',
+      lugar: 'Centro Odontológico Sura',
+      direccion: 'Calle 10 #43-22, Medellín',
+      estado: { label: 'PENDIENTE', cls: 'orange' },
+    },
+  ],
+  pasadas: [
+    {
+      id: 'c3',
+      tipo: 'Cardiología',
+      medico: 'Dr. Hernán Vélez',
+      fecha: '15 de marzo de 2025',
+      hora: '2:00 PM',
+      lugar: 'Clínica Las Américas',
+      estado: { label: 'REALIZADA', cls: 'gray' },
+    },
+  ],
+  canceladas: [
+    {
+      id: 'c4',
+      tipo: 'Medicina General',
+      medico: 'Dr. Carlos Ruiz Pérez',
+      fecha: '10 de abril de 2025',
+      hora: '9:00 AM',
+      lugar: 'Clínica Las Américas',
+      estado: { label: 'CANCELADA', cls: 'red' },
+    },
+  ],
+}
+
+export const AUTORIZACIONES = [
+  {
+    id: 'a1',
+    tipo: 'Resonancia Magnética Lumbar',
+    solicitada: '01/05/2025',
+    medico: 'Dra. López',
+    radicado: 'AUT-2025-001',
+    estado: { label: 'EN REVISIÓN', cls: 'orange', key: 'revision' },
+  },
+  {
+    id: 'a2',
+    tipo: 'Terapia Física (10 sesiones)',
+    solicitada: '22/04/2025',
+    medico: 'Dr. Ramírez',
+    radicado: 'AUT-2025-002',
+    estado: { label: 'APROBADA', cls: 'green', key: 'aprobadas' },
+  },
+  {
+    id: 'a3',
+    tipo: 'Cirugía de Rodilla',
+    solicitada: '10/03/2025',
+    medico: 'Dr. Ospina',
+    radicado: 'AUT-2025-003',
+    estado: { label: 'NEGADA', cls: 'red', key: 'negadas' },
+    motivo: 'No cumple criterios de inclusión según protocolo vigente.',
+  },
+  {
+    id: 'a4',
+    tipo: 'Ecografía Abdominal',
+    solicitada: '05/05/2025',
+    medico: 'Dra. Torres',
+    radicado: 'AUT-2025-004',
+    estado: { label: 'APROBADA', cls: 'green', key: 'aprobadas' },
+  },
+]
+
+export const MEDICAMENTOS = [
+  {
+    id: 'm1',
+    nombre: 'Atorvastatina 20 mg',
+    presentacion: 'Caja x 30 tabletas',
+    indicacion: 'Control de colesterol',
+    farmacia: 'Droguería Sura — Clínica Las Américas',
+    disponible: '15/05/2025',
+    vence: '30/06/2025',
+    alerta: false,
+  },
+  {
+    id: 'm2',
+    nombre: 'Metformina 850 mg',
+    presentacion: 'Caja x 60 tabletas',
+    indicacion: 'Control de glucosa',
+    farmacia: 'Droguería Sura — Clínica Las Américas',
+    disponible: '12/05/2025',
+    vence: '18/05/2025',
+    alerta: true,
+  },
+  {
+    id: 'm3',
+    nombre: 'Losartán 50 mg',
+    presentacion: 'Caja x 30 tabletas',
+    indicacion: 'Control de presión arterial',
+    farmacia: 'Droguería Sura — Clínica Las Américas',
+    disponible: '20/05/2025',
+    vence: '30/07/2025',
+    alerta: false,
+  },
+]
+
+export const HISTORIAL = {
+  2025: [
+    {
+      id: 'h1',
+      tipo: 'Medicina General',
+      medico: 'Dr. Carlos Ruiz Pérez',
+      fecha: '15 de marzo de 2025',
+      diagnostico: 'J06.9 — Infección aguda de las vías respiratorias superiores',
+      resumen: 'Infección respiratoria leve tratada con antibióticos orales. Evolución favorable.',
+      simple: 'Tuviste una infección en la garganta y nariz. Te dieron antibióticos y te mejoraste.',
+    },
+    {
+      id: 'h2',
+      tipo: 'Cardiología',
+      medico: 'Dr. Hernán Vélez',
+      fecha: '10 de enero de 2025',
+      diagnostico: 'I10 — Hipertensión esencial (primaria)',
+      resumen: 'Control de presión arterial. Se ajustó dosis de Losartán.',
+      simple: 'Revisaron tu presión arterial. Ajustaron la pastilla que tomas para controlarla.',
+    },
+  ],
+  2024: [
+    {
+      id: 'h3',
+      tipo: 'Medicina General',
+      medico: 'Dr. Carlos Ruiz Pérez',
+      fecha: '20 de agosto de 2024',
+      diagnostico: 'E11.9 — Diabetes mellitus tipo 2 sin complicaciones',
+      resumen: 'Diagnóstico inicial de diabetes tipo 2. Se inicia tratamiento con Metformina.',
+      simple: 'Te detectaron diabetes tipo 2. Empezaste a tomar Metformina para controlar el azúcar.',
+    },
+  ],
+  2023: [
+    {
+      id: 'h4',
+      tipo: 'Odontología',
+      medico: 'Dra. Laura Mejía',
+      fecha: '5 de mayo de 2023',
+      diagnostico: 'K02.1 — Caries de la dentina',
+      resumen: 'Obturación dental en molar superior derecho.',
+      simple: 'Te hicieron un relleno en una muela por caries.',
+    },
+  ],
+  2022: [
+    {
+      id: 'h5',
+      tipo: 'Medicina General',
+      medico: 'Dr. Carlos Ruiz Pérez',
+      fecha: '12 de febrero de 2022',
+      diagnostico: 'Z00.0 — Examen médico general',
+      resumen: 'Chequeo médico anual. Sin hallazgos patológicos significativos.',
+      simple: 'Fue tu chequeo anual. Todo salió bien.',
+    },
+  ],
+}

@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Accesibilidad: escala de texto ── */
+html[data-text="lg"]  { font-size: 18px; }
+html[data-text="xl"]  { font-size: 20px; }
+
+/* ── Accesibilidad: alto contraste ── */
+html[data-contrast="high"] {
+  --tw-text-color: #000;
+}
+html[data-contrast="high"] body {
+  color: #000;
+}
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Nunito', system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    color: #1A1A2E;
+    background-color: #F5F7FA;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  button { font-family: inherit; cursor: pointer; }
+  a      { color: #1565C0; }
+  img    { max-width: 100%; display: block; }
+
+  :focus-visible {
+    outline: 3px solid #1565C0;
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  #root {
+    width: 100%;
+    min-height: 100vh;
+  }
+}
+
+/* ── Skip link accesibilidad ── */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+}
+.skip-link:focus {
+  left: 12px;
+  top: 12px;
+  background: #0D47A1;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  z-index: 200;
+}
