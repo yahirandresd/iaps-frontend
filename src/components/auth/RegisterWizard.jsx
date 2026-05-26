@@ -10,6 +10,9 @@ import FormField, { inputCls } from '../ui/FormField'
 import Button from '../ui/Button'
 import { IdCardIcon, CalendarIcon, UserIcon, PhoneIcon, MailIcon, LockIcon, HomeIcon, EyeIcon, EyeOffIcon, ArrowRightIcon, ArrowLeftIcon, CheckIcon } from '../../assets/icons'
 import { onlyNumbers, onlyLetters } from '../../utils/inputRestrictions'
+import { useRateLimit } from '../../hooks/useRateLimit'
+
+function fmt(s) { return `${String(Math.floor(s / 60)).padStart(2,'0')}:${String(s % 60).padStart(2,'0')}` }
 
 const EPS_LIST = ['Sura EPS', 'Sanitas EPS', 'Compensar EPS', 'Nueva EPS', 'Salud Total', 'Famisanar', 'Coomeva', 'Mutual Ser', 'Otra / No sé']
 const ESTADO_LIST = ['Activo', 'Suspendido', 'Retirado', 'Pendiente']
@@ -98,6 +101,7 @@ export default function RegisterWizard() {
   const [done, setDone] = useState(false)
   const { login } = useAuth()
   const navigate = useNavigate()
+  const { isLocked, secondsLeft, recordAttempt, resetAttempts } = useRateLimit('register')
 
   const { register, handleSubmit, watch, formState: { errors }, reset } = useForm({
     resolver: yupResolver(schemas[step - 1]),
@@ -117,7 +121,8 @@ export default function RegisterWizard() {
       setSubmitting(true)
       const { data: user, error } = await registerService(merged)
       setSubmitting(false)
-      if (error) { toast.error(error); return }
+      if (error) { recordAttempt(); toast.error(error); return }
+      resetAttempts()
       setDone(true)
       setTimeout(() => {
         login(user)
@@ -307,13 +312,20 @@ export default function RegisterWizard() {
           </div>
         )}
 
+        {step === 4 && isLocked && (
+          <div className="bg-rojo-suave border border-rojo rounded-xl p-3 mb-3 text-center">
+            <p className="font-extrabold text-rojo text-[15px]">⛔ Demasiados intentos</p>
+            <p className="text-rojo text-[14px] mt-0.5">Puedes intentar de nuevo en <strong>{fmt(secondsLeft)}</strong></p>
+          </div>
+        )}
+
         <div className="flex gap-2.5 mt-1.5">
           {step > 1 && (
             <Button type="button" variant="ghost" onClick={goBack} className="flex-1">
               <ArrowLeftIcon className="w-5 h-5" /> Atrás
             </Button>
           )}
-          <Button type="submit" disabled={submitting} className="flex-1">
+          <Button type="submit" disabled={submitting || (step === 4 && isLocked)} className="flex-1">
             {step === 4 ? (submitting ? 'Creando cuenta…' : 'Crear cuenta') : 'Continuar'}
             <ArrowRightIcon className="w-5 h-5" />
           </Button>
