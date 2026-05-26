@@ -38,7 +38,7 @@ const today = new Date().toISOString().split('T')[0]
 
 const schema = yup.object({
   tipo:   yup.string().required('Selecciona el tipo de consulta'),
-  fecha:  yup.string().min(today, 'La fecha no puede ser anterior a hoy').required('Selecciona la fecha'),
+  fecha:  yup.string().required('Selecciona la fecha').test('min-date', 'La fecha no puede ser anterior a hoy', v => !!v && v >= today),
   hora:   yup.string().required('Selecciona la hora'),
   medico: yup.string().required('Selecciona un médico'),
   lugar:  yup.string(),
