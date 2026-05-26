@@ -22,7 +22,11 @@ const schemas = [
   }),
   yup.object({
     nombre: yup.string().matches(/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$/, 'Solo se permiten letras').min(3, 'Mínimo 3 caracteres').required('El nombre es obligatorio'),
-    bday:   yup.string().required('Selecciona tu fecha de nacimiento'),
+    bday:   yup.string().required('Selecciona tu fecha de nacimiento').test('min-age', 'Debes tener al menos 18 años', v => {
+      if (!v) return false
+      const max = new Date(); max.setFullYear(max.getFullYear() - 18)
+      return new Date(v) <= max
+    }),
     phone:  yup.string().matches(/^\d{10}$/, 'Celular inválido (10 dígitos)').required('El celular es obligatorio'),
     email:  yup.string().email('Correo inválido').required('El correo es obligatorio'),
   }),
@@ -177,7 +181,7 @@ export default function RegisterWizard() {
 
             <FormField label="Tipo de documento">
               <div className="flex gap-2">
-                {[['CC','Cédula'],['CE','Extranjería'],['TI','T. Identidad']].map(([val, sub]) => (
+                {[['CC','Cédula'],['CE','Extranjería']].map(([val, sub]) => (
                   <RadioCard key={val} label={val} sub={sub} selected={docType === val} onClick={() => setDocType(val)} />
                 ))}
               </div>
@@ -204,7 +208,7 @@ export default function RegisterWizard() {
             </FormField>
 
             <FormField label="Fecha de nacimiento" error={errors.bday?.message} icon={<CalendarIcon className="w-[18px] h-[18px]" />}>
-              <input {...register('bday')} type="date" className={inputCls(true, !!errors.bday)} />
+              <input {...register('bday')} type="date" max={(() => { const d = new Date(); d.setFullYear(d.getFullYear() - 18); return d.toISOString().split('T')[0] })()} className={inputCls(true, !!errors.bday)} />
             </FormField>
 
             <FormField label="Género">
