@@ -11,7 +11,7 @@ export default function Topbar({ notifCount = 3 }) {
   return (
     <header className="bg-azul-suave px-5 py-[18px] flex items-center gap-3 sticky top-0 z-30 border-b border-[rgba(21,101,192,.12)]" role="banner">
       <div className="flex items-center flex-1">
-        <img src="/iAPS_logo.png" alt="iAPS" className="h-9 w-auto object-contain" />
+        <img src="/iAPS_logo-removebg-preview.png" alt="iAPS" className="h-9 w-auto object-contain" />
       </div>
 
       <button

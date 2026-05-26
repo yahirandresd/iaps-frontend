@@ -7,7 +7,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'apple-touch-icon-180x180.png', 'iAPS_logo.png'],
+      includeAssets: ['favicon.ico', 'apple-touch-icon-180x180.png', 'iAPS_logo-removebg-preview.png'],
       manifest: {
         name: 'iAPS — Tu salud digital',
         short_name: 'iAPS',

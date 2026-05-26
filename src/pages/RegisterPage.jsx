@@ -16,7 +16,7 @@ export default function RegisterPage() {
         >
           <ArrowLeftIcon className="w-[22px] h-[22px] text-texto" />
         </button>
-        <img src="/iAPS_logo.png" alt="iAPS" className="h-10 w-auto object-contain" />
+        <img src="/iAPS_logo-removebg-preview.png" alt="iAPS" className="h-10 w-auto object-contain" />
       </div>
 
       <div className="bg-white rounded-xl p-[22px] shadow-lg border border-gris-borde">
