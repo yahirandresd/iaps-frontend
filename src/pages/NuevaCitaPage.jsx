@@ -147,8 +147,8 @@ export default function NuevaCitaPage() {
           </div>
         )}
 
-        {/* Fecha y Hora — side by side */}
-        <div className="grid grid-cols-2 gap-3">
+        {/* Fecha y Hora */}
+        <div className="flex flex-col gap-5">
           <div>
             <Label><CalendarIcon className="w-4 h-4 inline mr-1 -mt-0.5" />Fecha</Label>
             <input

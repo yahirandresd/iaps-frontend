@@ -4,18 +4,18 @@ import { LockIcon } from '../assets/icons'
 export default function LoginPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-azul-suave via-white to-verde-suave flex flex-col md:items-center md:justify-center">
-      <div className="w-full max-w-md mx-auto px-5 py-6 flex flex-col">
-      <div className="flex items-center gap-3 mt-6 mb-6">
-        <img src="/iAPS_logo-removebg-preview.png" alt="iAPS" className="h-14 w-auto object-contain" />
+      <div className="w-full max-w-md mx-auto px-5 py-4 flex flex-col">
+      <div className="flex items-center gap-3 mt-3 mb-4">
+        <img src="/iAPS_logo-removebg-preview.png" alt="iAPS" className="h-11 w-auto object-contain" />
         <div className="flex flex-col">
-          <span className="text-[28px] font-extrabold text-azul-oscuro tracking-tight leading-none">iAPS</span>
-          <span className="text-[13px] text-gris-texto font-semibold mt-0.5">Tu salud digital</span>
+          <span className="text-[24px] font-extrabold text-azul-oscuro tracking-tight leading-none">iAPS</span>
+          <span className="text-[12px] text-gris-texto font-semibold mt-0.5">Tu salud digital</span>
         </div>
       </div>
 
       <div className="bg-white rounded-xl p-[22px] shadow-lg border border-gris-borde">
         <h2 className="m-0 mb-1.5 text-[22px] font-extrabold">Iniciar sesión</h2>
-        <p className="m-0 mb-4 text-[15px] text-gris-texto">Ingresa con tu cédula de ciudadanía, la fecha de expedición y tu contraseña.</p>
+        <p className="m-0 mb-4 text-[15px] text-gris-texto">Ingresa con tu cédula de ciudadanía y tu contraseña.</p>
         <LoginForm />
       </div>
 
