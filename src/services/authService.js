@@ -1,42 +1,83 @@
-// import { axiosInstance } from './axiosInterceptor'  ← descomentar al conectar backend
-import { USER } from '../data/mockData'
+import { supabase } from '../lib/supabaseClient'
 
-/** @typedef {import('../models').LoginPayload}    LoginPayload */
-/** @typedef {import('../models').RegisterPayload} RegisterPayload */
-/** @typedef {import('../models').User}            User */
+const authEmail = (cedula) => `${cedula}@iaps.app`
 
-/**
- * Inicia sesión con cédula, fecha de expedición y contraseña.
- * @param {LoginPayload} payload
- * @returns {Promise<User>}
- */
-export async function login(payload) {
-  // const { data } = await axiosInstance.post('/auth/login', payload)
-  // return data
-  void payload
-  return USER
+export async function login(cedula, password) {
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: authEmail(cedula),
+    password,
+  })
+  if (error) throw new Error('Cédula o contraseña incorrectos.')
+
+  // Obtenemos el perfil usando el cliente ya autenticado con la sesión activa
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', data.user.id)
+    .single()
+
+  const base = profile ?? { id: data.user.id, email: data.user.email }
+  const initials = base.nombre?.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() ?? ''
+  return { ...base, initials }
 }
 
-/**
- * Registra un nuevo usuario.
- * @param {RegisterPayload} payload
- * @returns {Promise<{ data: User|null, error: string|null }>}
- */
-export async function register(payload) {
+export async function register(formData) {
   try {
-    // const { data } = await axiosInstance.post('/auth/register', payload)
-    // return { data, error: null }
-    const initials = (payload.nombre ?? 'U').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
-    return { data: { ...USER, ...payload, initials }, error: null }
+    const { data: authData, error: signUpError } = await supabase.auth.signUp({
+      email: authEmail(formData.numDoc),
+      password: formData.pwd,
+    })
+    if (signUpError) throw new Error(signUpError.message)
+
+    const userId = authData.user?.id
+    if (!userId) throw new Error('No se pudo crear la cuenta. Intenta de nuevo.')
+
+    const { error: profileError } = await supabase.from('profiles').insert({
+      id:               userId,
+      cedula:           formData.numDoc,
+      tipo_doc:         formData.docType,
+      fecha_exp:        formData.docDate,
+      nombre:           formData.nombre,
+      fecha_nac:        formData.bday,
+      genero:           formData.gender,
+      telefono:         formData.phone,
+      email:            formData.email,
+      eps:              formData.eps,
+      regimen:          formData.regimen,
+      estado:           formData.estado,
+      tipo_afiliado:    formData.tipo_afiliado,
+      fecha_afiliacion: formData.fecha_afiliacion,
+      fecha_fin:        formData.fecha_fin || null,
+    })
+    if (profileError) throw new Error(profileError.message)
+
+    const initials = formData.nombre.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
+    return {
+      data: {
+        id:               userId,
+        cedula:           formData.numDoc,
+        tipo_doc:         formData.docType,
+        fecha_exp:        formData.docDate,
+        nombre:           formData.nombre,
+        fecha_nac:        formData.bday,
+        genero:           formData.gender,
+        telefono:         formData.phone,
+        email:            formData.email,
+        eps:              formData.eps,
+        regimen:          formData.regimen,
+        estado:           formData.estado,
+        tipo_afiliado:    formData.tipo_afiliado,
+        fecha_afiliacion: formData.fecha_afiliacion,
+        fecha_fin:        formData.fecha_fin || null,
+        initials,
+      },
+      error: null,
+    }
   } catch (e) {
     return { data: null, error: e.message ?? 'Error al registrar' }
   }
 }
 
-/**
- * Cierra la sesión en el servidor (invalida el token).
- * @returns {Promise<void>}
- */
 export async function logout() {
-  // await axiosInstance.post('/auth/logout', {})
+  await supabase.auth.signOut()
 }

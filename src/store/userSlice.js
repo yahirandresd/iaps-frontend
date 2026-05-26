@@ -1,13 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { getSession } from '../services/securityService'
-
-const stored = getSession()
 
 const userSlice = createSlice({
   name: 'user',
   initialState: {
-    data: stored,
-    isAuthenticated: !!stored,
+    data: null,
+    isAuthenticated: false,
   },
   reducers: {
     setUser(state, action) {

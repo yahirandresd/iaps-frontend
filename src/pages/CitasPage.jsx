@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { toast } from 'sonner'
+import { useNavigate } from 'react-router-dom'
 import PageHeader from '../components/ui/PageHeader'
 import Tabs from '../components/ui/Tabs'
 import Button from '../components/ui/Button'
@@ -15,6 +15,7 @@ const TABS = [
 ]
 
 export default function CitasPage() {
+  const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState('proximas')
   const { data: citas, loading } = useAsync(getCitas)
 
@@ -49,7 +50,7 @@ export default function CitasPage() {
       <PageHeader title="Mis Citas" icon={<CalendarIcon className="w-[18px] h-[18px]" />} />
 
       <div className="p-3 pb-1">
-        <Button variant="verde" onClick={() => toast.info('Abriendo asistente para agendar nueva cita…')}>
+        <Button variant="verde" onClick={() => navigate('/citas/nueva')}>
           <PlusIcon className="w-5 h-5" /> Agendar nueva cita
         </Button>
       </div>

@@ -16,10 +16,7 @@ export default function RegisterPage() {
         >
           <ArrowLeftIcon className="w-[22px] h-[22px] text-texto" />
         </button>
-        <div>
-          <h1 className="m-0 text-[26px] font-black text-azul-oscuro leading-none">Crear cuenta</h1>
-          <div className="text-[13px] text-gris-texto font-semibold mt-0.5">Solo te tomará 2 minutos</div>
-        </div>
+        <img src="/iAPS_logo.png" alt="iAPS" className="h-10 w-auto object-contain" />
       </div>
 
       <div className="bg-white rounded-xl p-[22px] shadow-lg border border-gris-borde">

@@ -10,17 +10,8 @@ export default function Topbar({ notifCount = 3 }) {
 
   return (
     <header className="bg-azul-suave px-5 py-[18px] flex items-center gap-3 sticky top-0 z-30 border-b border-[rgba(21,101,192,.12)]" role="banner">
-      <div className="flex items-center gap-2.5 flex-1">
-        <div className="w-10 h-10 rounded-sm bg-gradient-to-br from-azul to-azul-oscuro grid place-items-center shadow-sm shrink-0">
-          <svg viewBox="0 0 32 32" className="w-6 h-6" fill="none">
-            <path d="M13 4h6v6h6v6h-6v6h-6v-6H7v-6h6V4z" fill="#fff"/>
-            <path d="M24 18c0-3 2-6 6-7-1 5-3 8-6 9v-2z" fill="#A5D6A7"/>
-          </svg>
-        </div>
-        <div>
-          <div className="font-black text-[22px] tracking-wide text-azul-oscuro leading-none">iAPS</div>
-          <div className="text-xs text-gris-texto leading-none mt-0.5">Tu salud, siempre en tus manos</div>
-        </div>
+      <div className="flex items-center flex-1">
+        <img src="/iAPS_logo.png" alt="iAPS" className="h-9 w-auto object-contain" />
       </div>
 
       <button

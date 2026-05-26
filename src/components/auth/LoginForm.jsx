@@ -7,13 +7,12 @@ import { toast } from 'sonner'
 import { useAuth } from '../../context/AuthContext'
 import FormField, { inputCls } from '../ui/FormField'
 import Button from '../ui/Button'
-import { IdCardIcon, CalendarIcon, LockIcon, EyeIcon, EyeOffIcon, ArrowRightIcon } from '../../assets/icons'
+import { IdCardIcon, LockIcon, EyeIcon, EyeOffIcon, ArrowRightIcon } from '../../assets/icons'
 import { onlyNumbers } from '../../utils/inputRestrictions'
 import { login as loginService } from '../../services/authService'
 
 const schema = yup.object({
   cedula:   yup.string().matches(/^\d{6,12}$/, 'Ingresa una cédula válida (6–12 dígitos)').required('La cédula es obligatoria'),
-  fechaExp: yup.string().required('Selecciona la fecha de expedición'),
   password: yup.string().min(4, 'Mínimo 4 caracteres').required('La contraseña es obligatoria'),
 })
 
@@ -22,13 +21,13 @@ export default function LoginForm() {
   const navigate = useNavigate()
   const [showPass, setShowPass] = useState(false)
 
-  const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(schema) })
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({ resolver: yupResolver(schema) })
 
-  const onSubmit = async (data) => {
+  const onSubmit = async ({ cedula, password }) => {
     try {
-      const user = await loginService(data)
-      login(user)
-      toast.success('¡Bienvenida, ' + user.nombre.split(' ')[0] + '!')
+      const profile = await loginService(cedula, password)
+      await login(profile)
+      toast.success(`¡Bienvenido/a, ${profile.nombre?.split(' ')[0] ?? ''}!`)
       navigate('/')
     } catch (e) {
       toast.error(e.message ?? 'Error al iniciar sesión')
@@ -47,14 +46,6 @@ export default function LoginForm() {
           autoComplete="username"
           onKeyDown={onlyNumbers}
           className={inputCls(true, !!errors.cedula)}
-        />
-      </FormField>
-
-      <FormField label="Fecha de expedición" error={errors.fechaExp?.message} hint="La fecha en que se expidió tu cédula." icon={<CalendarIcon className="w-[18px] h-[18px]" />}>
-        <input
-          {...register('fechaExp')}
-          type="date"
-          className={inputCls(true, !!errors.fechaExp)}
         />
       </FormField>
 
@@ -87,8 +78,8 @@ export default function LoginForm() {
         </button>
       </div>
 
-      <Button type="submit">
-        Ingresar
+      <Button type="submit" disabled={isSubmitting}>
+        {isSubmitting ? 'Ingresando…' : 'Ingresar'}
         <ArrowRightIcon className="w-5 h-5" />
       </Button>
 

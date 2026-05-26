@@ -1,15 +1,9 @@
+import { getToken } from './securityService'
+
 const BASE_URL = import.meta.env.VITE_API_URL ?? ''
 
-/**
- * Wrapper sobre fetch con manejo de errores centralizado.
- * Cuando se conecte al backend real, solo cambia VITE_API_URL en .env.
- *
- * @param {string} endpoint
- * @param {RequestInit} [options]
- * @returns {Promise<any>}
- */
 async function request(endpoint, options = {}) {
-  const token = localStorage.getItem('iaps_token')
+  const token = await getToken()
 
   const res = await fetch(`${BASE_URL}${endpoint}`, {
     headers: {

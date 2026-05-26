@@ -16,6 +16,7 @@ import HistorialPage from './pages/HistorialPage'
 import EpsPage from './pages/EpsPage'
 import AdresPage from './pages/AdresPage'
 import PerfilPage from './pages/PerfilPage'
+import NuevaCitaPage from './pages/NuevaCitaPage'
 
 function PrivateRoute({ children }) {
   const { isAuthenticated } = useAuth()
@@ -47,6 +48,7 @@ export default function App() {
             <Route element={<PrivateRoute><AppLayout /></PrivateRoute>}>
               <Route index element={<HomePage />} />
               <Route path="citas"          element={<CitasPage />} />
+              <Route path="citas/nueva"   element={<NuevaCitaPage />} />
               <Route path="autorizaciones" element={<AutorizacionesPage />} />
               <Route path="medicamentos"   element={<MedicamentosPage />} />
               <Route path="historial"      element={<HistorialPage />} />

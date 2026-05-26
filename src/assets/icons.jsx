@@ -27,4 +27,5 @@ export const GlobeIcon       = (p) => <svg viewBox="0 0 24 24" {...base} {...p}>
 export const UsersIcon       = (p) => <svg viewBox="0 0 24 24" {...base} {...p}><circle cx="9" cy="9" r="3.5"/><path d="M2 21c0-3.5 3-6 7-6s7 2.5 7 6"/><path d="M16.5 7a3 3 0 1 1 0 6"/><path d="M22 19c0-2.5-2-4.5-4.5-4.5"/></svg>
 export const HandIcon        = (p) => <svg viewBox="0 0 24 24" {...base} {...p}><path d="M9 11V6a2 2 0 0 1 4 0v5"/><path d="M13 11V4a2 2 0 0 1 4 0v9"/><path d="M17 11V7a2 2 0 0 1 4 0v8a7 7 0 0 1-7 7h-2a8 8 0 0 1-8-8v-1a2 2 0 0 1 4 0"/></svg>
 export const ChevronRightIcon= (p) => <svg viewBox="0 0 24 24" {...base} {...p}><path d="M9 6l6 6-6 6"/></svg>
+export const ClockIcon       = (p) => <svg viewBox="0 0 24 24" {...base} {...p}><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
 export const TextSizeIcon    = (p) => <svg viewBox="0 0 24 24" {...base} {...p}><path d="M5 20l5-14 5 14M7 15h6"/><path d="M19 12v6M16 15h6"/></svg>

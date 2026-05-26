@@ -12,6 +12,8 @@ import { IdCardIcon, CalendarIcon, UserIcon, PhoneIcon, MailIcon, LockIcon, Home
 import { onlyNumbers, onlyLetters } from '../../utils/inputRestrictions'
 
 const EPS_LIST = ['Sura EPS', 'Sanitas EPS', 'Compensar EPS', 'Nueva EPS', 'Salud Total', 'Famisanar', 'Coomeva', 'Mutual Ser', 'Otra / No sé']
+const ESTADO_LIST = ['Activo', 'Suspendido', 'Retirado', 'Pendiente']
+const TIPO_AFILIADO_LIST = ['Cotizante', 'Beneficiario', 'Independiente', 'Subsidiado']
 
 const schemas = [
   yup.object({
@@ -25,7 +27,11 @@ const schemas = [
     email:  yup.string().email('Correo inválido').required('El correo es obligatorio'),
   }),
   yup.object({
-    eps: yup.string().required('Selecciona una EPS'),
+    eps:              yup.string().required('Selecciona una EPS'),
+    estado:           yup.string().required('Selecciona el estado'),
+    fecha_afiliacion: yup.string().required('Ingresa la fecha de afiliación'),
+    fecha_fin:        yup.string().nullable(),
+    tipo_afiliado:    yup.string().required('Selecciona el tipo de afiliado'),
   }),
   yup.object({
     pwd:   yup.string().min(8, 'Mínimo 8 caracteres').matches(/[A-Z]/, 'Debe tener al menos 1 mayúscula').matches(/\d/, 'Debe tener al menos 1 número').matches(/[^A-Za-z0-9]/, 'Debe tener al menos 1 símbolo').required(),
@@ -95,6 +101,8 @@ export default function RegisterWizard() {
 
   const pwd = watch('pwd') ?? ''
 
+  const [submitting, setSubmitting] = useState(false)
+
   const onStepSubmit = async (data) => {
     const merged = { ...formData, ...data, docType, gender, regimen }
     setFormData(merged)
@@ -102,7 +110,9 @@ export default function RegisterWizard() {
       setStep(s => s + 1)
       reset()
     } else {
+      setSubmitting(true)
       const { data: user, error } = await registerService(merged)
+      setSubmitting(false)
       if (error) { toast.error(error); return }
       setDone(true)
       setTimeout(() => {
@@ -219,9 +229,9 @@ export default function RegisterWizard() {
         {step === 3 && (
           <div className="animate-[fade_.25s_ease_both]">
             <h2 className="text-2xl font-extrabold mb-1">Tu afiliación al sistema</h2>
-            <p className="text-[15px] text-gris-texto mb-4">Si no la sabes, puedes consultarla más tarde.</p>
+            <p className="text-[15px] text-gris-texto mb-4">Datos de tu afiliación en el sistema de salud colombiano.</p>
 
-            <FormField label="EPS a la que estás afiliado(a)" error={errors.eps?.message} icon={<HomeIcon className="w-[18px] h-[18px]" />}>
+            <FormField label="Entidad / EPS" error={errors.eps?.message} icon={<HomeIcon className="w-[18px] h-[18px]" />}>
               <select {...register('eps')} className={`${inputCls(true, !!errors.eps)} appearance-none`}>
                 <option value="">Selecciona tu EPS…</option>
                 {EPS_LIST.map(e => <option key={e}>{e}</option>)}
@@ -236,8 +246,26 @@ export default function RegisterWizard() {
               </div>
             </FormField>
 
-            <FormField label={<>IPS asignada <span className="text-gris-texto font-semibold">(opcional)</span></>} icon={<HomeIcon className="w-[18px] h-[18px]" />} hint="Si no la sabes, la asignaremos automáticamente.">
-              <input {...register('ips')} type="text" placeholder="Ej. Clínica Las Américas" onKeyDown={onlyLetters} className={inputCls(true, false)} />
+            <FormField label="Estado de afiliación" error={errors.estado?.message} icon={<HomeIcon className="w-[18px] h-[18px]" />}>
+              <select {...register('estado')} className={`${inputCls(true, !!errors.estado)} appearance-none`}>
+                <option value="">Selecciona el estado…</option>
+                {ESTADO_LIST.map(e => <option key={e}>{e}</option>)}
+              </select>
+            </FormField>
+
+            <FormField label="Tipo de afiliado" error={errors.tipo_afiliado?.message} icon={<HomeIcon className="w-[18px] h-[18px]" />}>
+              <select {...register('tipo_afiliado')} className={`${inputCls(true, !!errors.tipo_afiliado)} appearance-none`}>
+                <option value="">Selecciona el tipo…</option>
+                {TIPO_AFILIADO_LIST.map(t => <option key={t}>{t}</option>)}
+              </select>
+            </FormField>
+
+            <FormField label="Fecha de afiliación efectiva" error={errors.fecha_afiliacion?.message} icon={<CalendarIcon className="w-[18px] h-[18px]" />}>
+              <input {...register('fecha_afiliacion')} type="date" className={inputCls(true, !!errors.fecha_afiliacion)} />
+            </FormField>
+
+            <FormField label={<>Fecha de finalización <span className="text-gris-texto font-semibold">(opcional)</span></>} icon={<CalendarIcon className="w-[18px] h-[18px]" />}>
+              <input {...register('fecha_fin')} type="date" className={inputCls(true, false)} />
             </FormField>
           </div>
         )}
@@ -281,8 +309,8 @@ export default function RegisterWizard() {
               <ArrowLeftIcon className="w-5 h-5" /> Atrás
             </Button>
           )}
-          <Button type="submit" className="flex-1">
-            {step === 4 ? 'Crear cuenta' : 'Continuar'}
+          <Button type="submit" disabled={submitting} className="flex-1">
+            {step === 4 ? (submitting ? 'Creando cuenta…' : 'Crear cuenta') : 'Continuar'}
             <ArrowRightIcon className="w-5 h-5" />
           </Button>
         </div>

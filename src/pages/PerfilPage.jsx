@@ -4,8 +4,9 @@ import { useAuth } from '../context/AuthContext'
 import AlertDialog from '../components/ui/AlertDialog'
 import StatusBadge from '../components/ui/StatusBadge'
 import Button from '../components/ui/Button'
-import { UserIcon, IdCardIcon, CalendarIcon, PhoneIcon, MailIcon, HomeIcon, ClipboardIcon, MapPinIcon, UsersIcon, BellIcon, LockIcon, FileTextIcon, LogOutIcon, EditIcon } from '../assets/icons'
-import { USER } from '../data/mockData'
+import { UserIcon, IdCardIcon, CalendarIcon, PhoneIcon, MailIcon, HomeIcon, ClipboardIcon, BellIcon, LockIcon, FileTextIcon, LogOutIcon, EditIcon } from '../assets/icons'
+
+const cap = (str) => str ? str.charAt(0).toUpperCase() + str.slice(1) : '—'
 
 function DataRow({ icon: Icon, label, children }) {
   return (
@@ -13,16 +14,33 @@ function DataRow({ icon: Icon, label, children }) {
       <Icon className="w-[22px] h-[22px] text-azul-oscuro mt-0.5" />
       <div>
         <div className="text-[13px] text-gris-texto font-bold">{label}</div>
-        <div className="text-base font-bold text-texto mt-0.5">{children}</div>
+        <div className="text-base font-bold text-texto mt-0.5">{children ?? <span className="text-gris-borde">—</span>}</div>
       </div>
     </div>
   )
 }
 
+function calcularEdad(fechaNac) {
+  if (!fechaNac) return null
+  const hoy = new Date()
+  const nac = new Date(fechaNac)
+  let edad = hoy.getFullYear() - nac.getFullYear()
+  const m = hoy.getMonth() - nac.getMonth()
+  if (m < 0 || (m === 0 && hoy.getDate() < nac.getDate())) edad--
+  return edad
+}
+
+function formatFecha(fecha) {
+  if (!fecha) return null
+  const [y, m, d] = fecha.split('-')
+  return `${d}/${m}/${y}`
+}
+
 export default function PerfilPage() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
-  const u = { ...USER, ...user }
+
+  const edad = calcularEdad(user?.fecha_nac)
 
   const handleLogout = () => {
     logout()
@@ -33,10 +51,12 @@ export default function PerfilPage() {
     <section className="animate-[fade_.28s_ease_both] pb-6" style={{ paddingTop: 0 }}>
       <div className="bg-gradient-to-b from-azul-suave to-transparent px-4 pt-5 pb-1.5 text-center">
         <div className="w-24 h-24 mx-auto mb-2.5 rounded-full bg-gradient-to-br from-[#5e96d1] to-azul text-white grid place-items-center text-[36px] font-extrabold shadow-md border-4 border-white">
-          {u.initials ?? 'MF'}
+          {user?.initials ?? '?'}
         </div>
-        <h2 className="m-0 mt-1 font-extrabold text-[22px]">{u.nombre}</h2>
-        <div className="text-gris-texto text-sm mb-3">Afiliada · Régimen {u.regimen ?? 'Contributivo'}</div>
+        <h2 className="m-0 mt-1 font-extrabold text-[22px]">{user?.nombre ?? '—'}</h2>
+        <div className="text-gris-texto text-sm mb-3 capitalize">
+          {user?.tipo_afiliado ?? 'Afiliado'} · Régimen {user?.regimen ?? '—'}
+        </div>
         <Button variant="ghost" size="sm" className="inline-flex w-auto min-w-[200px]" onClick={() => toast.info('Modo edición disponible próximamente.')}>
           <EditIcon className="w-[18px] h-[18px]" /> Editar información
         </Button>
@@ -45,45 +65,30 @@ export default function PerfilPage() {
       <div className="px-3">
         <div className="text-[12px] font-extrabold text-gris-texto tracking-[1.5px] uppercase mx-1 mt-4 mb-2">Datos personales</div>
         <div className="bg-white border border-gris-borde rounded-lg overflow-hidden shadow-sm">
-          <DataRow icon={UserIcon} label="Nombre completo">{u.nombre}</DataRow>
-          <DataRow icon={IdCardIcon} label="Cédula de ciudadanía">{u.cedula}</DataRow>
-          <DataRow icon={CalendarIcon} label="Fecha de nacimiento">{u.bday} <span className="text-gris-texto font-semibold">({u.edad} años)</span></DataRow>
-          <DataRow icon={PhoneIcon} label="Teléfono">{u.phone}</DataRow>
-          <DataRow icon={MailIcon} label="Correo electrónico">{u.email}</DataRow>
+          <DataRow icon={UserIcon}     label="Nombre completo">{user?.nombre}</DataRow>
+          <DataRow icon={IdCardIcon}   label={`${user?.tipo_doc ?? 'Documento'}`}>{user?.cedula}</DataRow>
+          <DataRow icon={CalendarIcon} label="Fecha de nacimiento">
+            {formatFecha(user?.fecha_nac)}
+            {edad !== null && <span className="text-gris-texto font-semibold ml-1">({edad} años)</span>}
+          </DataRow>
+          <DataRow icon={PhoneIcon}    label="Teléfono">{user?.telefono}</DataRow>
+          <DataRow icon={MailIcon}     label="Correo electrónico">{user?.email}</DataRow>
         </div>
 
         <div className="text-[12px] font-extrabold text-gris-texto tracking-[1.5px] uppercase mx-1 mt-4 mb-2">Afiliación al sistema de salud</div>
         <div className="bg-white border border-gris-borde rounded-lg overflow-hidden shadow-sm">
-          <DataRow icon={HomeIcon} label="EPS">{u.eps}</DataRow>
-          <DataRow icon={ClipboardIcon} label="Tipo de régimen">
-            <StatusBadge cls="green" label={u.regimen ?? 'Contributivo'} />
+          <DataRow icon={HomeIcon}      label="EPS / Entidad">{user?.eps}</DataRow>
+          <DataRow icon={ClipboardIcon} label="Régimen">
+            <StatusBadge cls="green" label={cap(user?.regimen)} />
           </DataRow>
-          <div className="grid grid-cols-[28px_1fr] gap-3 items-start py-3.5 px-4 border-b border-gris-borde">
-            <HomeIcon className="w-[22px] h-[22px] text-azul-oscuro mt-0.5" />
-            <div>
-              <div className="text-[13px] text-gris-texto font-bold">IPS asignada</div>
-              <div className="text-base font-bold text-texto mt-0.5">{u.ips}</div>
-              <div className="text-gris-texto text-sm mt-0.5">{u.ipsDir}</div>
-              <div className="flex gap-2 mt-2.5">
-                <a href="tel:+5743451010" className="flex-1 min-h-11 rounded-[12px] bg-verde text-white font-extrabold text-sm inline-flex items-center justify-center gap-1.5 no-underline">
-                  <PhoneIcon className="w-[18px] h-[18px]" /> Llamar
-                </a>
-                <button onClick={() => toast.info('Abriendo mapa…')} className="flex-1 min-h-11 rounded-[12px] border-2 border-azul text-azul bg-white font-extrabold text-sm">
-                  <MapPinIcon className="w-[18px] h-[18px] inline mr-1" /> Ver mapa
-                </button>
-              </div>
-            </div>
-          </div>
-          <DataRow icon={IdCardIcon} label="Número de afiliado">{u.afiliado}</DataRow>
-        </div>
-
-        <div className="text-[12px] font-extrabold text-gris-texto tracking-[1.5px] uppercase mx-1 mt-4 mb-2">Contacto de emergencia</div>
-        <div className="bg-white border border-gris-borde rounded-lg overflow-hidden shadow-sm">
-          <DataRow icon={UsersIcon} label="Persona">{u.emergContacto}</DataRow>
-          <DataRow icon={PhoneIcon} label="Teléfono">{u.emergTel}</DataRow>
-        </div>
-        <div className="py-2.5 px-1">
-          <Button variant="ghost" size="sm" onClick={() => toast.info('Editor de contacto próximamente.')}>Actualizar contacto</Button>
+          <DataRow icon={IdCardIcon}    label="Estado de afiliación">
+            <StatusBadge cls={user?.estado === 'Activo' ? 'green' : 'red'} label={cap(user?.estado)} />
+          </DataRow>
+          <DataRow icon={UserIcon}      label="Tipo de afiliado"><span className="capitalize">{user?.tipo_afiliado}</span></DataRow>
+          <DataRow icon={CalendarIcon}  label="Fecha de afiliación efectiva">{formatFecha(user?.fecha_afiliacion)}</DataRow>
+          {user?.fecha_fin && (
+            <DataRow icon={CalendarIcon} label="Fecha de finalización">{formatFecha(user?.fecha_fin)}</DataRow>
+          )}
         </div>
 
         <div className="text-[12px] font-extrabold text-gris-texto tracking-[1.5px] uppercase mx-1 mt-4 mb-2">Acciones</div>

@@ -15,8 +15,8 @@ export default function Greeting() {
         ¡Hola, {firstName}!
       </h2>
       <div className="flex flex-col gap-0.5 text-[15px] text-gris-texto">
-        <span>EPS: <strong className="text-texto font-bold">{user?.eps ?? 'Sura'}</strong> · Régimen <strong className="text-texto font-bold">{user?.regimen ?? 'Contributivo'}</strong></span>
-        <span>IPS: <strong className="text-texto font-bold">{user?.ips ?? 'Clínica Las Américas'}</strong></span>
+        <span>EPS: <strong className="text-texto font-bold">{user?.eps ?? '—'}</strong> · Régimen <strong className="text-texto font-bold capitalize">{user?.regimen ?? '—'}</strong></span>
+        <span>Estado: <strong className="text-texto font-bold capitalize">{user?.estado ?? '—'}</strong> · Tipo: <strong className="text-texto font-bold capitalize">{user?.tipo_afiliado ?? '—'}</strong></span>
       </div>
       <span className="mt-2.5 text-sm text-azul-oscuro bg-azul-suave px-2.5 py-1.5 rounded-full inline-flex items-center gap-1 font-bold">
         <CalendarIcon className="w-4 h-4" />
