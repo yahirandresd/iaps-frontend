@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabaseClient'
+import { CITAS as MOCK_CITAS } from '../data/mockData'
 
 function mapEstado(estado) {
   const map = {
@@ -39,6 +40,8 @@ export async function getCitas() {
     .order('fecha', { ascending: true })
 
   if (error) throw new Error(error.message)
+
+  if (!data.length) return MOCK_CITAS
 
   const proximas   = data.filter(c => ['pendiente', 'confirmada'].includes(c.estado)).map(toCitaUI)
   const pasadas    = data.filter(c => c.estado === 'realizada').map(toCitaUI)
