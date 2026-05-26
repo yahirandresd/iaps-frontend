@@ -36,7 +36,7 @@ const HORAS = [
 const today = new Date().toISOString().split('T')[0]
 
 const fieldCls = (hasError = false) =>
-  `w-full min-h-[52px] rounded-[14px] border-2 bg-white font-nunito text-[16px] px-4 py-3 text-texto
+  `w-full max-w-full min-w-0 min-h-[52px] rounded-[14px] border-2 bg-white font-nunito text-[16px] px-4 py-3 text-texto
    transition-colors focus:outline-none focus:border-azul focus:shadow-[0_0_0_4px_rgba(21,101,192,.15)]
    ${hasError ? 'border-rojo bg-rojo-suave' : 'border-gris-borde'}`
 
@@ -92,7 +92,7 @@ export default function NuevaCitaPage() {
   const medicos = MEDICOS[selectedTipo] ?? []
 
   return (
-    <section className="animate-[fade_.28s_ease_both] pb-10">
+    <section className="animate-[fade_.28s_ease_both] pb-10 overflow-x-hidden">
       <PageHeader title="Nueva cita" icon={<CalendarIcon className="w-[18px] h-[18px]" />} />
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="px-4 flex flex-col gap-5 mt-3">
