@@ -41,13 +41,15 @@ export async function getCitas() {
 
   if (error) throw new Error(error.message)
 
-  if (!data.length) return MOCK_CITAS
-
   const proximas   = data.filter(c => ['pendiente', 'confirmada'].includes(c.estado)).map(toCitaUI)
   const pasadas    = data.filter(c => c.estado === 'realizada').map(toCitaUI)
   const canceladas = data.filter(c => c.estado === 'cancelada').map(toCitaUI)
 
-  return { proximas, pasadas, canceladas }
+  return {
+    proximas:   [...proximas,   ...MOCK_CITAS.proximas],
+    pasadas:    [...pasadas,    ...MOCK_CITAS.pasadas],
+    canceladas: [...canceladas, ...MOCK_CITAS.canceladas],
+  }
 }
 
 export async function agendarCita(payload) {
