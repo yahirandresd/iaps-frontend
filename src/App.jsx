@@ -18,6 +18,7 @@ import AdresPage from './pages/AdresPage'
 import PerfilPage from './pages/PerfilPage'
 import NuevaCitaPage from './pages/NuevaCitaPage'
 import LandingPage from './pages/LandingPage'
+import PWAUpdatePrompt from './components/PWAUpdatePrompt'
 
 function PrivateRoute({ children }) {
   const { isAuthenticated } = useAuth()
@@ -35,6 +36,7 @@ export default function App() {
     <AuthProvider>
       <AccessibilityProvider>
         <BrowserRouter>
+          <PWAUpdatePrompt />
           <Toaster
             position="bottom-center"
             richColors
