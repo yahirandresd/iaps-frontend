@@ -9,7 +9,7 @@ export default function Topbar({ notifCount = 3 }) {
   const initials = user?.initials ?? user?.nombre?.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() ?? 'U'
 
   return (
-    <header className="bg-azul-suave px-5 py-[18px] flex items-center gap-3 sticky top-0 z-30 border-b border-[rgba(21,101,192,.12)]" role="banner">
+    <header className="bg-azul-suave px-5 py-[18px] flex items-center gap-3 sticky top-0 z-30 border-b border-[rgba(21,101,192,.12)]" style={{ paddingTop: 'calc(env(safe-area-inset-top) + 18px)' }} role="banner">
       <div className="flex items-center gap-1.5 flex-1">
         <img src="/iAPS_logo-removebg-preview.png" alt="iAPS" className="h-9 w-auto object-contain" />
         <span className="text-[20px] font-extrabold text-azul-oscuro tracking-tight leading-none">iAPS</span>
