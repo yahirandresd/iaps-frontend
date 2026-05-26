@@ -3,9 +3,9 @@ import { LockIcon } from '../assets/icons'
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-azul-suave via-white to-verde-suave flex flex-col md:items-center md:justify-center">
-      <div className="w-full max-w-md mx-auto px-5 py-4 flex flex-col">
-      <div className="flex items-center gap-3 mt-3 mb-4">
+    <div className="min-h-screen bg-gradient-to-b from-azul-suave via-white to-verde-suave flex flex-col items-center justify-center">
+      <div className="w-full max-w-md mx-auto px-5 py-6 flex flex-col">
+      <div className="flex items-center gap-3 mb-5">
         <img src="/iAPS_logo-removebg-preview.png" alt="iAPS" className="h-11 w-auto object-contain" />
         <div className="flex flex-col">
           <span className="text-[24px] font-extrabold text-azul-oscuro tracking-tight leading-none">iAPS</span>
