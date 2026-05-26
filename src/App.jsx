@@ -17,10 +17,11 @@ import EpsPage from './pages/EpsPage'
 import AdresPage from './pages/AdresPage'
 import PerfilPage from './pages/PerfilPage'
 import NuevaCitaPage from './pages/NuevaCitaPage'
+import LandingPage from './pages/LandingPage'
 
 function PrivateRoute({ children }) {
   const { isAuthenticated } = useAuth()
-  return isAuthenticated ? children : <Navigate to="/login" replace />
+  return isAuthenticated ? children : <Navigate to="/landing" replace />
 }
 
 function PublicRoute({ children }) {
@@ -42,6 +43,7 @@ export default function App() {
             }}
           />
           <Routes>
+            <Route path="/landing"  element={<PublicRoute><LandingPage /></PublicRoute>} />
             <Route path="/login"    element={<PublicRoute><LoginPage /></PublicRoute>} />
             <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
 
@@ -57,7 +59,7 @@ export default function App() {
               <Route path="perfil"         element={<PerfilPage />} />
             </Route>
 
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="*" element={<Navigate to="/landing" replace />} />
           </Routes>
         </BrowserRouter>
       </AccessibilityProvider>
