@@ -39,11 +39,11 @@ export async function getCitas() {
     .select('*')
     .order('fecha', { ascending: true })
 
-  if (error) throw new Error(error.message)
+  const rows = error ? [] : (data ?? [])
 
-  const proximas   = data.filter(c => ['pendiente', 'confirmada'].includes(c.estado)).map(toCitaUI)
-  const pasadas    = data.filter(c => c.estado === 'realizada').map(toCitaUI)
-  const canceladas = data.filter(c => c.estado === 'cancelada').map(toCitaUI)
+  const proximas   = rows.filter(c => ['pendiente', 'confirmada'].includes(c.estado)).map(toCitaUI)
+  const pasadas    = rows.filter(c => c.estado === 'realizada').map(toCitaUI)
+  const canceladas = rows.filter(c => c.estado === 'cancelada').map(toCitaUI)
 
   return {
     proximas:   [...proximas,   ...MOCK_CITAS.proximas],
