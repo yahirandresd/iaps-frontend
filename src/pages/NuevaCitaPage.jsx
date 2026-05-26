@@ -6,9 +6,8 @@ import * as yup from 'yup'
 import { toast } from 'sonner'
 import { useAuth } from '../context/AuthContext'
 import PageHeader from '../components/ui/PageHeader'
-import FormField, { inputCls } from '../components/ui/FormField'
 import Button from '../components/ui/Button'
-import { CalendarIcon, ClockIcon, UserIcon, HomeIcon, FileTextIcon } from '../assets/icons'
+import { CalendarIcon, ClockIcon, UserIcon, HomeIcon, FileTextIcon, ChevronRightIcon, CheckCircleIcon } from '../assets/icons'
 import { agendarCita } from '../services/citasService'
 
 const MEDICOS = {
@@ -36,11 +35,24 @@ const HORAS = [
 
 const today = new Date().toISOString().split('T')[0]
 
+const fieldCls = (hasError = false) =>
+  `w-full min-h-[52px] rounded-[14px] border-2 bg-white font-nunito text-[16px] px-4 py-3 text-texto
+   transition-colors focus:outline-none focus:border-azul focus:shadow-[0_0_0_4px_rgba(21,101,192,.15)]
+   ${hasError ? 'border-rojo bg-rojo-suave' : 'border-gris-borde'}`
+
+function Label({ children }) {
+  return <p className="text-[13px] font-extrabold text-texto mb-1.5 uppercase tracking-wide">{children}</p>
+}
+
+function FieldError({ msg }) {
+  return msg ? <p className="text-[13px] text-rojo font-bold mt-1">{msg}</p> : null
+}
+
 const schema = yup.object({
-  tipo:   yup.string().required('Selecciona el tipo de consulta'),
+  tipo:   yup.string().required('Selecciona la especialidad'),
+  medico: yup.string().required('Selecciona un médico'),
   fecha:  yup.string().required('Selecciona la fecha').test('min-date', 'La fecha no puede ser anterior a hoy', v => !!v && v >= today),
   hora:   yup.string().required('Selecciona la hora'),
-  medico: yup.string().required('Selecciona un médico'),
   lugar:  yup.string(),
   notas:  yup.string(),
 })
@@ -61,6 +73,7 @@ export default function NuevaCitaPage() {
     setSelectedTipo(tipo)
     setSelectedMedico('')
     setValue('medico', '', { shouldValidate: false })
+    setValue('tipo', tipo, { shouldValidate: true })
   }
 
   const handleMedicoSelect = (nombre) => {
@@ -79,89 +92,110 @@ export default function NuevaCitaPage() {
   const medicos = MEDICOS[selectedTipo] ?? []
 
   return (
-    <section className="animate-[fade_.28s_ease_both] pb-8">
+    <section className="animate-[fade_.28s_ease_both] pb-10">
       <PageHeader title="Nueva cita" icon={<CalendarIcon className="w-[18px] h-[18px]" />} />
 
-      <form onSubmit={handleSubmit(onSubmit)} noValidate className="px-3 flex flex-col gap-0.5 mt-1">
+      <form onSubmit={handleSubmit(onSubmit)} noValidate className="px-4 flex flex-col gap-5 mt-3">
 
-        <FormField label="Tipo de consulta" error={errors.tipo?.message} icon={<FileTextIcon className="w-[18px] h-[18px]" />}>
-          <select
-            {...register('tipo')}
-            onChange={handleTipoChange}
-            className={`${inputCls(true, !!errors.tipo)} appearance-none`}
-          >
-            <option value="">Selecciona una especialidad…</option>
-            {TIPOS.map(t => <option key={t}>{t}</option>)}
-          </select>
-        </FormField>
+        {/* Especialidad */}
+        <div>
+          <Label><FileTextIcon className="w-4 h-4 inline mr-1 -mt-0.5" />Especialidad</Label>
+          <div className="relative">
+            <select
+              {...register('tipo')}
+              onChange={handleTipoChange}
+              className={`${fieldCls(!!errors.tipo)} appearance-none pr-10`}
+            >
+              <option value="">Selecciona una especialidad…</option>
+              {TIPOS.map(t => <option key={t}>{t}</option>)}
+            </select>
+            <ChevronRightIcon className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gris-texto rotate-90 pointer-events-none" />
+          </div>
+          <FieldError msg={errors.tipo?.message} />
+        </div>
 
-        {/* Doctor selection — aparece al elegir especialidad */}
+        {/* Médico */}
         {selectedTipo && (
-          <FormField label="Médico disponible" error={errors.medico?.message} icon={<UserIcon className="w-[18px] h-[18px]" />}>
+          <div>
+            <Label><UserIcon className="w-4 h-4 inline mr-1 -mt-0.5" />Médico disponible</Label>
             <input type="hidden" {...register('medico')} />
-            <div className="flex flex-col gap-2 pt-1">
-              {medicos.map((nombre) => (
-                <button
-                  key={nombre}
-                  type="button"
-                  onClick={() => handleMedicoSelect(nombre)}
-                  className={`w-full text-left px-4 py-3 rounded-[14px] border-2 font-bold text-[15px] transition-all
-                    ${selectedMedico === nombre
-                      ? 'border-azul bg-azul-suave text-azul-oscuro'
-                      : 'border-gris-borde bg-white text-texto hover:border-azul'}`}
-                >
-                  <span className="block">{nombre}</span>
-                  <span className={`text-[13px] font-semibold ${selectedMedico === nombre ? 'text-azul' : 'text-gris-texto'}`}>
-                    {selectedTipo}
-                  </span>
-                </button>
-              ))}
+            <div className="flex flex-col gap-2">
+              {medicos.map((nombre) => {
+                const active = selectedMedico === nombre
+                return (
+                  <button
+                    key={nombre}
+                    type="button"
+                    onClick={() => handleMedicoSelect(nombre)}
+                    className={`flex items-center gap-3 w-full text-left px-4 py-3.5 rounded-[14px] border-2 transition-all
+                      ${active ? 'border-azul bg-azul-suave' : 'border-gris-borde bg-white'}`}
+                  >
+                    <div className={`w-5 h-5 rounded-full border-2 shrink-0 grid place-items-center
+                      ${active ? 'border-azul bg-azul' : 'border-gris-borde bg-white'}`}>
+                      {active && <span className="w-2 h-2 rounded-full bg-white block" />}
+                    </div>
+                    <div>
+                      <p className={`font-extrabold text-[15px] leading-tight ${active ? 'text-azul-oscuro' : 'text-texto'}`}>{nombre}</p>
+                      <p className={`text-[13px] ${active ? 'text-azul' : 'text-gris-texto'}`}>{selectedTipo}</p>
+                    </div>
+                    {active && <CheckCircleIcon className="w-5 h-5 text-azul ml-auto shrink-0" />}
+                  </button>
+                )
+              })}
             </div>
-          </FormField>
+            <FieldError msg={errors.medico?.message} />
+          </div>
         )}
 
-        <FormField label="Fecha" error={errors.fecha?.message} icon={<CalendarIcon className="w-[18px] h-[18px]" />}>
-          <input
-            {...register('fecha')}
-            type="date"
-            min={today}
-            className={inputCls(true, !!errors.fecha)}
-          />
-        </FormField>
+        {/* Fecha y Hora — side by side */}
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <Label><CalendarIcon className="w-4 h-4 inline mr-1 -mt-0.5" />Fecha</Label>
+            <input
+              {...register('fecha')}
+              type="date"
+              min={today}
+              className={fieldCls(!!errors.fecha)}
+            />
+            <FieldError msg={errors.fecha?.message} />
+          </div>
+          <div>
+            <Label><ClockIcon className="w-4 h-4 inline mr-1 -mt-0.5" />Hora</Label>
+            <div className="relative">
+              <select {...register('hora')} className={`${fieldCls(!!errors.hora)} appearance-none pr-8`}>
+                <option value="">Hora…</option>
+                {HORAS.map(h => <option key={h}>{h}</option>)}
+              </select>
+              <ChevronRightIcon className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gris-texto rotate-90 pointer-events-none" />
+            </div>
+            <FieldError msg={errors.hora?.message} />
+          </div>
+        </div>
 
-        <FormField label="Hora" error={errors.hora?.message} icon={<ClockIcon className="w-[18px] h-[18px]" />}>
-          <select {...register('hora')} className={`${inputCls(true, !!errors.hora)} appearance-none`}>
-            <option value="">Selecciona una hora…</option>
-            {HORAS.map(h => <option key={h}>{h}</option>)}
-          </select>
-        </FormField>
-
-        <FormField
-          label={<>Lugar / IPS <span className="text-gris-texto font-semibold">(opcional)</span></>}
-          error={errors.lugar?.message}
-          icon={<HomeIcon className="w-[18px] h-[18px]" />}
-        >
+        {/* Lugar */}
+        <div>
+          <Label><HomeIcon className="w-4 h-4 inline mr-1 -mt-0.5" />Lugar / IPS <span className="normal-case text-gris-texto font-semibold">(opcional)</span></Label>
           <input
             {...register('lugar')}
             type="text"
             placeholder="Ej. Clínica Las Américas"
-            className={inputCls(true, !!errors.lugar)}
+            className={fieldCls(false)}
           />
-        </FormField>
+        </div>
 
-        <FormField
-          label={<>Observaciones <span className="text-gris-texto font-semibold">(opcional)</span></>}
-          icon={<FileTextIcon className="w-[18px] h-[18px]" />}
-        >
+        {/* Observaciones */}
+        <div>
+          <Label><FileTextIcon className="w-4 h-4 inline mr-1 -mt-0.5" />Observaciones <span className="normal-case text-gris-texto font-semibold">(opcional)</span></Label>
           <textarea
             {...register('notas')}
             rows={3}
             placeholder="Síntomas, motivo de consulta…"
-            className={`${inputCls(true, false)} resize-none`}
+            className={`${fieldCls(false)} resize-none`}
           />
-        </FormField>
+        </div>
 
-        <div className="flex gap-2.5 mt-2">
+        {/* Botones */}
+        <div className="flex gap-3">
           <Button type="button" variant="ghost" className="flex-1" onClick={() => navigate('/citas')}>
             Cancelar
           </Button>
@@ -169,6 +203,7 @@ export default function NuevaCitaPage() {
             {isSubmitting ? 'Agendando…' : 'Agendar cita'}
           </Button>
         </div>
+
       </form>
     </section>
   )
